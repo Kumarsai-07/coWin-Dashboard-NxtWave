@@ -1,0 +1,13 @@
+.vaccination-bg-container {
+  background-color: #1c1c2b;
+  padding: 20px;
+  margin-top: 30px;
+}
+
+.title {
+  color: #cbd5e1;
+  font-family: 'Roboto';
+  font-size: 24px;
+  font-weight: 400;
+  margin-bottom: 30px;
+}
