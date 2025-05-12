@@ -31,38 +31,46 @@ class CowinDashboard extends Component {
       apiStatus: apiStatusConstants.inProgress,
     })
 
-    const vaccinationDataApiUrl = 'https://apis.ccbp.in/covid-vaccination-data'
+    try {
+      const vaccinationDataApiUrl =
+        'https://apis.ccbp.in/covid-vaccination-data'
 
-    const response = await fetch(vaccinationDataApiUrl)
-    console.log(response.status)
-    if (response.ok) {
-      const data = await response.json()
+      const response = await fetch(vaccinationDataApiUrl)
+      console.log(response.status)
+      if (response.ok === true) {
+        const data = await response.json()
 
-      const formattedDataByDays = data.last_7_days_vaccination.map(eachDay => ({
-        dose1: eachDay.dose_1,
-        dose2: eachDay.dose_2,
-        vaccineDate: eachDay.vaccine_date,
-      }))
+        const formattedDataByDays = data.last_7_days_vaccination.map(
+          eachDay => ({
+            dose1: eachDay.dose_1,
+            dose2: eachDay.dose_2,
+            vaccineDate: eachDay.vaccine_date,
+          }),
+        )
 
-      const formattedDataByAge = data.vaccination_by_age.map(eachAge => ({
-        age: eachAge.age,
-        count: eachAge.count,
-      }))
+        const formattedDataByAge = data.vaccination_by_age.map(eachAge => ({
+          age: eachAge.age,
+          count: eachAge.count,
+        }))
 
-      const formattedDataByGender = data.vaccination_by_gender.map(
-        eachGender => ({
-          count: eachGender.count,
-          gender: eachGender.gender,
-        }),
-      )
+        const formattedDataByGender = data.vaccination_by_gender.map(
+          eachGender => ({
+            count: eachGender.count,
+            gender: eachGender.gender,
+          }),
+        )
 
-      this.setState({
-        vaccinationByDays: formattedDataByDays,
-        vaccinationByAge: formattedDataByAge,
-        vaccinationByGender: formattedDataByGender,
-        apiStatus: apiStatusConstants.success,
-      })
-    } else if (response.status === 401) {
+        this.setState({
+          vaccinationByDays: formattedDataByDays,
+          vaccinationByAge: formattedDataByAge,
+          vaccinationByGender: formattedDataByGender,
+          apiStatus: apiStatusConstants.success,
+        })
+      } else if (response.status === 403) {
+        console.log('403 Error')
+        this.setState({apiStatus: apiStatusConstants.failure})
+      }
+    } catch (error) {
       this.setState({apiStatus: apiStatusConstants.failure})
     }
   }
